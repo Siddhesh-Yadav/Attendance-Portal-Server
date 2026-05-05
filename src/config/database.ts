@@ -1,0 +1,43 @@
+import { Sequelize } from 'sequelize';
+import { env } from './env';
+import { logger } from './logger';
+
+export const sequelize = new Sequelize({
+  dialect: 'postgres',
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  database: env.DB_NAME,
+  username: env.DB_USER,
+  password: env.DB_PASSWORD,
+  logging: env.NODE_ENV === 'development' ? (msg) => logger.debug(msg) : false,
+  pool: {
+    max: 10,
+    min: 2,
+    acquire: 30000,
+    idle: 10000,
+  },
+  define: {
+    timestamps: true,
+    underscored: false,
+  },
+});
+
+export async function connectDatabase(): Promise<void> {
+  try {
+    await sequelize.authenticate();
+    logger.info('✅ Database connection established successfully');
+  } catch (error) {
+    logger.error('❌ Unable to connect to database:', error);
+    process.exit(1);
+  }
+}
+
+export async function syncDatabase(): Promise<void> {
+  try {
+    await sequelize.sync({ alter: env.NODE_ENV === 'development' });
+    logger.info('✅ Database synced successfully');
+  } catch (error) {
+    logger.error('❌ Database sync failed:', error);
+    throw error;
+  }
+}
