@@ -53,7 +53,7 @@ router.get('/own', authMiddleware, requirePermission([PERMISSIONS.LEAVE_VIEW_OWN
  *     summary: Get pending leave requests for manager's reportees
  *     security: [{ bearerAuth: [] }]
  */
-router.get('/pending', authMiddleware, requirePermission([PERMISSIONS.LEAVE_APPROVE]), leaveController.getPending);
+router.get('/pending', authMiddleware, requirePermission([PERMISSIONS.LEAVE_VIEW_ALL]), leaveController.getPending);
 
 /**
  * @swagger

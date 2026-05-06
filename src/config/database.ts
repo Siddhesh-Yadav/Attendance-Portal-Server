@@ -30,14 +30,4 @@ export async function connectDatabase(): Promise<void> {
     logger.error('❌ Unable to connect to database:', error);
     process.exit(1);
   }
-}
-
-export async function syncDatabase(): Promise<void> {
-  try {
-    await sequelize.sync({ alter: env.NODE_ENV === 'development' });
-    logger.info('✅ Database synced successfully');
-  } catch (error) {
-    logger.error('❌ Database sync failed:', error);
-    throw error;
-  }
-}
+};

@@ -34,14 +34,15 @@ const ROLE_PERMISSION_MAP: Record<string, string[]> = {
     'attendance:view_own', 'attendance:view_team', 'attendance:view_all',
     'leave:view_own', 'leave:view_all',
     'user:create', 'user:deactivate', 'user:assign_role', 'user:assign_manager',
-    'leave_type:configure',
+    'leave_type:configure', 'leave:approve',
   ],
 };
 
 async function seed() {
   try {
     await connectDatabase();
-    await sequelize.sync({ force: true });
+    // sequelize.sync() removed as per production requirements. 
+    // Ensure schema is created via SQL migration/dump before seeding.
 
     logger.info('🌱 Starting database seeding...');
 

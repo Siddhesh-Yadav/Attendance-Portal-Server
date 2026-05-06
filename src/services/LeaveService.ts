@@ -109,28 +109,46 @@ export class LeaveService {
     };
   }
 
-  async getPendingForManager(managerId: number) {
-    const reportees = await User.findAll({ where: { managerId }, attributes: ['id'] });
-    const reporteeIds = reportees.map((r) => r.id);
-    if (reporteeIds.length === 0) return { requests: [], totalPending: 0 };
+  async getTeamLeavesForManager(managerId: number, role: string) {
+    let reporteeIds: number[] | null = null;
+
+    if (role !== ROLES.HR) {
+      const reportees = await User.findAll({ where: { managerId }, attributes: ['id'] });
+      reporteeIds = reportees.map((r) => r.id);
+      if (reporteeIds.length === 0) return { requests: [], total: 0 };
+    }
+
+    const where: any = {};
+    if (reporteeIds) {
+      where.userId = { [Op.in]: reporteeIds };
+    }
 
     const requests = await LeaveRequest.findAll({
-      where: { userId: { [Op.in]: reporteeIds }, status: LEAVE_STATUS.PENDING },
+      where,
       include: [
         { model: User, as: 'user', attributes: ['id', 'fullName', 'email'] },
         { model: LeaveType, as: 'leaveType', attributes: ['id', 'name'] },
       ],
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
     });
 
     return {
       requests: requests.map((r) => ({
-        id: r.id, userId: r.userId, userName: (r as any).user?.fullName,
-        userEmail: (r as any).user?.email, leaveType: (r as any).leaveType?.name,
-        startDate: r.startDate, endDate: r.endDate, reason: r.reason,
-        leaveDays: calculateLeaveDays(r.startDate, r.endDate), createdAt: r.createdAt,
+        id: r.id,
+        userId: r.userId,
+        userName: (r as any).user?.fullName,
+        userEmail: (r as any).user?.email,
+        leaveType: (r as any).leaveType?.name,
+        startDate: r.startDate,
+        endDate: r.endDate,
+        reason: r.reason,
+        status: r.status,
+        approvalRemark: r.approvalRemark,
+        rejectionRemark: r.rejectionRemark,
+        leaveDays: calculateLeaveDays(r.startDate, r.endDate),
+        createdAt: r.createdAt,
       })),
-      totalPending: requests.length,
+      total: requests.length,
     };
   }
 

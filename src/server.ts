@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 import app from './app';
 import { env } from './config/env';
-import { connectDatabase, syncDatabase } from './config/database';
+import { connectDatabase } from './config/database';
 import { logger } from './config/logger';
 
 // Import models to register associations
@@ -12,9 +12,6 @@ async function startServer() {
     // Connect to database
     await connectDatabase();
 
-    // Sync models (creates tables if not exist)
-    await syncDatabase();
-
     // Start Express server
     const server = app.listen(env.PORT, () => {
       logger.info(`🚀 Server running on http://localhost:${env.PORT}`);
@@ -23,17 +20,19 @@ async function startServer() {
       logger.info(`🌍 Environment: ${env.NODE_ENV}`);
     });
 
-    // Graceful shutdown
-    const shutdown = async (signal: string) => {
-      logger.info(`${signal} received. Shutting down gracefully...`);
+    const exitGracefully = () => {
+      logger.info('Shutting down server...');
+      server.closeAllConnections();
       server.close(() => {
         logger.info('Server closed');
         process.exit(0);
       });
+      // Force exit after a very short timeout to ensure the port is freed
+      setTimeout(() => process.exit(0), 100).unref();
     };
 
-    process.on('SIGTERM', () => shutdown('SIGTERM'));
-    process.on('SIGINT', () => shutdown('SIGINT'));
+    process.on('SIGTERM', exitGracefully);
+    process.on('SIGINT', exitGracefully);
   } catch (error) {
     logger.error('Failed to start server:', error);
     process.exit(1);

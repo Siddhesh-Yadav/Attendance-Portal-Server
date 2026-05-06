@@ -54,6 +54,16 @@ router.patch('/users/:id', authMiddleware, requirePermission([PERMISSIONS.USER_A
  */
 router.patch('/users/:id/deactivate', authMiddleware, requirePermission([PERMISSIONS.USER_DEACTIVATE]), hrController.deactivateUser);
 
+/**
+ * @swagger
+ * /api/v1/hr/roles:
+ *   get:
+ *     tags: [HR]
+ *     summary: Get all roles
+ *     security: [{ bearerAuth: [] }]
+ */
+router.get('/roles', authMiddleware, hrController.getAllRoles);
+
 // ─── Leave Type Configuration ───────────────────────────────────
 
 /**

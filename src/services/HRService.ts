@@ -126,6 +126,9 @@ export class HRService {
     logger.info('Leave type updated', { leaveTypeId: id });
     return leaveType;
   }
+  async getAllRoles() {
+    return Role.findAll({ order: [['id', 'ASC']] });
+  }
 }
 
 export const hrService = new HRService();

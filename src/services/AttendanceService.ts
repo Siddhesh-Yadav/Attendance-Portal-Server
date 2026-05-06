@@ -103,6 +103,7 @@ export class AttendanceService {
       date: r.date,
       checkInTime: r.checkInTime,
       checkOutTime: r.checkOutTime,
+      status: r.checkOutTime ? 'CHECKED_OUT' : 'CHECKED_IN',
       hoursWorked: r.checkOutTime ? calculateHours(new Date(r.checkInTime), new Date(r.checkOutTime)) : null,
     }));
 

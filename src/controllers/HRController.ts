@@ -57,6 +57,12 @@ export class HRController {
       sendSuccess(res, { message: 'Leave type updated', data: result });
     } catch (err) { next(err); }
   }
+  async getAllRoles(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await hrService.getAllRoles();
+      sendSuccess(res, { message: 'Roles retrieved', data: result });
+    } catch (err) { next(err); }
+  }
 }
 
 export const hrController = new HRController();

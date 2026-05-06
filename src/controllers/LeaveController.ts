@@ -13,6 +13,8 @@ export class LeaveController {
   async getOwn(req: Request, res: Response, next: NextFunction) {
     try {
       const { status } = req.query as any;
+      console.log(req.user?.id);
+      
       const result = await leaveService.getOwnLeaveRequests(req.user!.id, status);
       sendSuccess(res, { message: 'Leave requests retrieved', data: result });
     } catch (err) { next(err); }
@@ -20,8 +22,8 @@ export class LeaveController {
 
   async getPending(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await leaveService.getPendingForManager(req.user!.id);
-      sendSuccess(res, { message: 'Pending leave requests retrieved', data: result });
+      const result = await leaveService.getTeamLeavesForManager(req.user!.id, req.user!.role);
+      sendSuccess(res, { message: 'Team leave requests retrieved', data: result });
     } catch (err) { next(err); }
   }
 
