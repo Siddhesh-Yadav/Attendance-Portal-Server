@@ -164,11 +164,11 @@ INSERT INTO role_permissions ("roleId", "permissionId") VALUES
 -- Users (password: password123, bcrypt hash)
 -- NOTE: Generate the hash with: node -e "require('bcryptjs').hash('password123', 10).then(console.log)"
 INSERT INTO users (email, "fullName", "passwordHash", "roleId", "managerId", "isActive") VALUES
-  ('hr@company.com', 'HR Admin', '$2a$10$placeholder_replace_with_real_hash', 3, NULL, true),
-  ('manager@company.com', 'John Manager', '$2a$10$placeholder_replace_with_real_hash', 2, NULL, true),
-  ('emp1@company.com', 'Alice Employee', '$2a$10$placeholder_replace_with_real_hash', 1, 2, true),
-  ('emp2@company.com', 'Bob Employee', '$2a$10$placeholder_replace_with_real_hash', 1, 2, true),
-  ('emp3@company.com', 'Charlie Employee', '$2a$10$placeholder_replace_with_real_hash', 1, 2, true);
+  ('hr@company.com', 'HR Admin', '$2a$10$iMHUfAjRXBV43g3Ndegbcea0fExnrP4pNQ3GyD9AS4c5kimrJqmXi', 3, NULL, true),
+  ('manager@company.com', 'John Manager', '$2a$10$iMHUfAjRXBV43g3Ndegbcea0fExnrP4pNQ3GyD9AS4c5kimrJqmXi', 2, NULL, true),
+  ('emp1@company.com', 'Alice Employee', '$2a$10$iMHUfAjRXBV43g3Ndegbcea0fExnrP4pNQ3GyD9AS4c5kimrJqmXi', 1, 2, true),
+  ('emp2@company.com', 'Bob Employee', '$2a$10$iMHUfAjRXBV43g3Ndegbcea0fExnrP4pNQ3GyD9AS4c5kimrJqmXi', 1, 2, true),
+  ('emp3@company.com', 'Charlie Employee', '$2a$10$iMHUfAjRXBV43g3Ndegbcea0fExnrP4pNQ3GyD9AS4c5kimrJqmXi', 1, 2, true);
 
 -- Leave Types
 INSERT INTO leave_types (name, "annualQuota", description) VALUES
