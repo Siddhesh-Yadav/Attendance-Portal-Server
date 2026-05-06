@@ -18,30 +18,48 @@ const PERMISSIONS_DATA = [
   { code: 'user:deactivate', description: 'Can deactivate users', category: 'user' },
   { code: 'user:assign_role', description: 'Can assign roles', category: 'user' },
   { code: 'user:assign_manager', description: 'Can assign managers', category: 'user' },
-  { code: 'leave_type:configure', description: 'Can configure leave types', category: 'leave_type' },
+  {
+    code: 'leave_type:configure',
+    description: 'Can configure leave types',
+    category: 'leave_type',
+  },
 ];
 
 const ROLE_PERMISSION_MAP: Record<string, string[]> = {
   EMPLOYEE: [
-    'attendance:checkin', 'attendance:checkout', 'attendance:view_own',
-    'leave:apply', 'leave:view_own',
+    'attendance:checkin',
+    'attendance:checkout',
+    'attendance:view_own',
+    'leave:apply',
+    'leave:view_own',
   ],
   MANAGER: [
-    'attendance:checkin', 'attendance:checkout', 'attendance:view_own', 'attendance:view_team',
-    'leave:apply', 'leave:view_own', 'leave:approve',
+    'attendance:checkin',
+    'attendance:checkout',
+    'attendance:view_own',
+    'attendance:view_team',
+    'leave:apply',
+    'leave:view_own',
+    'leave:approve',
+    'leave:view_all',
   ],
   HR: [
-    'attendance:view_own', 'attendance:view_team', 'attendance:view_all',
-    'leave:view_own', 'leave:view_all',
-    'user:create', 'user:deactivate', 'user:assign_role', 'user:assign_manager',
-    'leave_type:configure', 'leave:approve',
+    'attendance:view_team',
+    'attendance:view_all',
+    'leave:view_all',
+    'user:create',
+    'user:deactivate',
+    'user:assign_role',
+    'user:assign_manager',
+    'leave_type:configure',
+    'leave:approve',
   ],
 };
 
 async function seed() {
   try {
     await connectDatabase();
-    // sequelize.sync() removed as per production requirements. 
+    // sequelize.sync() removed as per production requirements.
     // Ensure schema is created via SQL migration/dump before seeding.
 
     logger.info('🌱 Starting database seeding...');
@@ -79,28 +97,48 @@ async function seed() {
     const empRole = roles.find((r) => r.code === 'EMPLOYEE')!;
 
     const hr = await User.create({
-      email: 'hr@company.com', fullName: 'HR Admin', passwordHash,
-      roleId: hrRole.id, managerId: null, isActive: true,
+      email: 'hr@company.com',
+      fullName: 'HR Admin',
+      passwordHash,
+      roleId: hrRole.id,
+      managerId: null,
+      isActive: true,
     });
 
     const manager = await User.create({
-      email: 'manager@company.com', fullName: 'John Manager', passwordHash,
-      roleId: mgrRole.id, managerId: null, isActive: true,
+      email: 'manager@company.com',
+      fullName: 'John Manager',
+      passwordHash,
+      roleId: mgrRole.id,
+      managerId: null,
+      isActive: true,
     });
 
     const emp1 = await User.create({
-      email: 'emp1@company.com', fullName: 'Alice Employee', passwordHash,
-      roleId: empRole.id, managerId: manager.id, isActive: true,
+      email: 'emp1@company.com',
+      fullName: 'Alice Employee',
+      passwordHash,
+      roleId: empRole.id,
+      managerId: manager.id,
+      isActive: true,
     });
 
     const emp2 = await User.create({
-      email: 'emp2@company.com', fullName: 'Bob Employee', passwordHash,
-      roleId: empRole.id, managerId: manager.id, isActive: true,
+      email: 'emp2@company.com',
+      fullName: 'Bob Employee',
+      passwordHash,
+      roleId: empRole.id,
+      managerId: manager.id,
+      isActive: true,
     });
 
     const emp3 = await User.create({
-      email: 'emp3@company.com', fullName: 'Charlie Employee', passwordHash,
-      roleId: empRole.id, managerId: manager.id, isActive: true,
+      email: 'emp3@company.com',
+      fullName: 'Charlie Employee',
+      passwordHash,
+      roleId: empRole.id,
+      managerId: manager.id,
+      isActive: true,
     });
 
     logger.info('✅ Seeded 5 users (hr, manager, emp1, emp2, emp3)');
@@ -124,6 +162,7 @@ async function seed() {
 
     process.exit(0);
   } catch (error) {
+    console.log(error);
     logger.error('❌ Seeding failed:', error);
     process.exit(1);
   }
